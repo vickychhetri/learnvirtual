@@ -18,4 +18,9 @@ Route::get('/', function () {
 });
 Route::get('/video', function () {
     return view('video');
-});
+});    
+
+Route::get('/Admin-Login', function () {
+    return view('AdminLogin');
+});    
+
