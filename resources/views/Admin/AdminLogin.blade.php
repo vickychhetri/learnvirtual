@@ -41,7 +41,7 @@
         <div class="container">
 
             <!-- main-heading -->
-            <h2 class="main-title-w3layouts mb-2 text-center text-white">Learn Virtual</h2>
+            <h2 class="main-title-w3layouts mb-2 text-center text-white">Virtual Control Panel</h2>
             <!--// main-heading -->
             <div class="row">
             <div class="col-md-3">
