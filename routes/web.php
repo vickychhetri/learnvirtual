@@ -21,6 +21,6 @@ Route::get('/video', function () {
 });    
 
 Route::get('/Admin-Login', function () {
-    return view('AdminLogin');
+    return view('Admin.AdminLogin');
 });    
 
