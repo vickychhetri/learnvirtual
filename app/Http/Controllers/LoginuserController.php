@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\loginuser;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class LoginuserController extends Controller
 {
@@ -14,7 +15,7 @@ class LoginuserController extends Controller
      */
     public function index()
     {
-        //
+        return view('User.register');
     }
 
     /**
@@ -35,7 +36,31 @@ class LoginuserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $request->validate([
+            'fullName' => 'required|min:3|max:50',
+            'email' => 'required|email',
+            'mobile' => 'required',
+            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:6',
+            'termCondition'=>'required'
+        ]);
+
+        try {
+    $database_agent= new loginuser;
+    $database_agent->name=$request->fullName;
+    $database_agent->email=$request->email;
+    $database_agent->mobile=$request->mobile;
+    $database_agent->password=$request->password;
+    $database_agent->save();
+    
+        } catch (QueryException $e) {    
+            print($e);
+    return redirect()->back()->with('Error', 'Error : Try Again !');
+    }
+
+    return redirect('/Login')->with('message', 'Registration Successfully Done ! , login Now.');
+  
     }
 
     /**
