@@ -49,6 +49,16 @@
                 <div class="col-md-6">
 
                     <div class="form-body-w3-agile text-center w-lg-50 w-sm-75 w-100 mx-auto mt-5">
+                        @if (session('message'))
+                        <div class="alert alert-success">
+                            {{ session('message') }}
+                        </div>
+                        @endif
+                        @if (session('Error'))
+                        <div class="alert alert-danger">
+                            {{ session('Error') }}
+                        </div>
+                        @endif
                         <form action="/Register" method="post">
                             {{csrf_field()}}
                             <div class="form-group">

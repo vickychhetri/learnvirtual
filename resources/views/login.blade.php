@@ -60,14 +60,17 @@
                         </div>
                         @endif
 
-                        <form action="#" method="post">
+                        <form action="/Login" method="post">
+                            {{csrf_field()}}
                             <div class="form-group">
                                 <label>Email address</label>
-                                <input type="email" class="form-control" placeholder="Enter email" required="">
+                                <input type="email" class="form-control" name="email" placeholder="Enter email"
+                                    required="">
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
-                                <input type="password" class="form-control" placeholder="Password" required="">
+                                <input type="password" class="form-control" name="password" placeholder="Password"
+                                    required="">
                             </div>
                             <div class="d-sm-flex justify-content-between">
                                 <div class="form-check col-md-6 text-sm-left text-center">

@@ -42,8 +42,40 @@ Route::post('/Add/Chapter', 'App\Http\Controllers\ChapterController@store');
 
 //User
 Route::get('/Register', 'App\Http\Controllers\LoginuserController@index');
+
 Route::post('/Register', 'App\Http\Controllers\LoginuserController@store');
 
 Route::get('/Login', function () {
     return view('login');
+});
+
+// Forgot or logout session 
+Route::get('/noaccess', function () {
+    Session()->forget('username');
+    Session()->forget('password');
+    Session()->flush();
+    return redirect("/Login")->with('message', ' User is logged out !');
+});
+Route::post('/Login', 'App\Http\Controllers\LoginuserController@login_check');
+
+
+
+
+
+//check register
+//if valid open dashboard
+
+// Protected group by middleware
+Route::group(["middleware" => ["UserLogChecker"]], function(){
+Route::get('/UDashboard', 'App\Http\Controllers\userdasboard@index');
+
+Route::get('/User/Start-Course', 'App\Http\Controllers\userdasboard@courseStart');
+Route::get('/User/Demographic', 'App\Http\Controllers\userdasboard@demographics');
+Route::get('/User/Test/{questionID}', 'App\Http\Controllers\AttempttestController@index');
+Route::get('/User/Start-Test/{testID}', 'App\Http\Controllers\AttempttestController@start_test');
+
+Route::get('/User/list-Test', 'App\Http\Controllers\AttempttestController@list_test');
+Route::get('/User/Start-Test/{testID}', 'App\Http\Controllers\AttempttestController@start_test');
+
+
 });

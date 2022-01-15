@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\loginuser;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-
 class LoginuserController extends Controller
 {
     /**
@@ -28,6 +28,42 @@ class LoginuserController extends Controller
         //
     }
 
+    public function login_check(Request $request)
+    {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+        try {
+    
+            $database_agent2= loginuser::where('email','=',$request->email)
+            ->where('password','=',$request->password)            
+            ->get()
+            ->first();
+            //save the content in session and open dashboard
+            if($database_agent2){
+           
+                Session()->put('userid',$database_agent2->UserID);
+                Session()->put('username',$database_agent2->email);
+                Session()->put('fullname',$database_agent2->name);
+                Session()->put('mobile',$database_agent2->mobile);
+                Session()->put('photo',$database_agent2->profilePhoto);
+                Session()->put('approved',$database_agent2->approved);
+                Session()->put('created_at',$database_agent2->created_at);
+
+                return redirect('/UDashboard')->with('message', 'Welcome');
+                  
+            }else {
+                return redirect()->back()->with('Error', 'Error : Invalid Login !');
+            }
+           
+                } catch (QueryException $e) {    
+                    print($e);
+            return redirect()->back()->with('Error', 'Error : Invalid Login !');
+            }
+        
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -45,8 +81,12 @@ class LoginuserController extends Controller
             'password_confirmation' => 'min:6',
             'termCondition'=>'required'
         ]);
-
         try {
+    
+    $database_agent2= loginuser::where('email','=',$request->email)->get()->first();
+    if($database_agent2){
+        return redirect()->back()->with('Error', 'Error : Email Already registered !');
+    }
     $database_agent= new loginuser;
     $database_agent->name=$request->fullName;
     $database_agent->email=$request->email;
