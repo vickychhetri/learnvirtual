@@ -7,22 +7,41 @@ use App\Models\questionbank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Lockunlockmodule;
+use App\Models\Testcomplete;
 
 class AttempttestController extends Controller
 {
+    public function isTestLocked($testID){
+        $unlock=0;
+        $unlockValue=Lockunlockmodule::where('ContentType','=','1')
+        ->where('unLock','=','1')
+        ->where('ContentID','=',$testID)
+        ->get()
+        ->first();
+
+        if(isset($unlockValue)){
+            if($unlockValue->unLock==1){
+                $unlock=1;
+            }else {
+                $unlock=0;
+            }
+        }else {
+            $unlock=0;
+        }
+        return $unlock;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($questionID)
+    public function index($testID)
     {
         $dataset = DB::table('test_modules')
         ->join('questionbanks', 'test_modules.TestID', '=', 'questionbanks.TestID')
         ->select('questionbanks.*', 'test_modules.*')
-        ->where('questionbanks.QuestionID', '=', $questionID)
-        ->get()
-        ->first();  
+        ->where('questionbanks.TestID', '=', $testID)
+        ->get();
 
         return view('User.userarea.question')
         ->with('Quest',$dataset);
@@ -30,6 +49,19 @@ class AttempttestController extends Controller
     
     public function start_test($testID)
     {
+        $TestType="0";
+        $datasetComplete=Testcomplete::where('TestID','=',$testID)->get();
+        // print_r($datasetComplete);
+        if(!isset($datasetComplete->Complete)){
+                $TestType="PRE";
+        }else{
+            $TestType="1";
+        }
+        $obj=new AttempttestController();
+        $unlock=$obj->isTestLocked($testID);
+        if($unlock==0){
+            return redirect('/User/list-Test');
+        }
         $dataset = DB::table('test_modules')
         ->join('questionbanks', 'test_modules.TestID', '=', 'questionbanks.TestID')
         ->select('questionbanks.*', 'test_modules.*')
@@ -38,6 +70,7 @@ class AttempttestController extends Controller
 
         return view('User.userarea.startTest')
         ->with('test',$dataset)
+        ->with('TestType',$TestType)
         ->with('noQ',$dataset->count());
 
     }
@@ -88,7 +121,7 @@ class AttempttestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        var_dump($request);
     }
 
     /**

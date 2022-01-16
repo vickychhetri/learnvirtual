@@ -142,7 +142,8 @@
     <!-- Js for bootstrap working-->
     <script src="/js/bootstrap.min.js"></script>
     <!-- //Js for bootstrap working -->
-
+    @section("footerContainer")
+    @show
 </body>
 
 </html>

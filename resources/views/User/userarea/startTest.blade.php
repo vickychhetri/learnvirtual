@@ -16,8 +16,9 @@
         <h3 class="main-title-w3layouts mb-2 ">Test Name: {{$test[0]->testName}}</h3>
         <p>Detail: {{$test[0]->testDescription}} </p>
         <p>No. of Question: {{$noQ}} </p>
+        <p>Mode: {{$TestType}} </p>
         <center> 
-            <a href="/User/Start-Test/Questions/{{$test[0]->TestID}}" class="btn btn-success"> Start</a>
+            <a href="/User/Test/{{$test[0]->TestID}}" class="btn btn-success"> Start</a>
         </center>
             <!--// main-heading -->
         </p>

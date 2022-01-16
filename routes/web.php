@@ -71,11 +71,10 @@ Route::get('/UDashboard', 'App\Http\Controllers\userdasboard@index');
 
 Route::get('/User/Start-Course', 'App\Http\Controllers\userdasboard@courseStart');
 Route::get('/User/Demographic', 'App\Http\Controllers\userdasboard@demographics');
-Route::get('/User/Test/{questionID}', 'App\Http\Controllers\AttempttestController@index');
+Route::get('/User/Test/{testID}', 'App\Http\Controllers\AttempttestController@index');
 Route::get('/User/Start-Test/{testID}', 'App\Http\Controllers\AttempttestController@start_test');
 
 Route::get('/User/list-Test', 'App\Http\Controllers\AttempttestController@list_test');
-Route::get('/User/Start-Test/{testID}', 'App\Http\Controllers\AttempttestController@start_test');
-
+Route::post('/User/Test', 'App\Http\Controllers\AttempttestController@store');
 
 });
