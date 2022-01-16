@@ -41,7 +41,7 @@ class Kernel extends HttpKernel
 
         'UserLogChecker'=>[
             \App\Http\Middleware\Userlogchecker::class,
-            \App\Http\Middleware\PreventBackHistory::class,
+            \App\Http\Middleware\Preventbackhistory::class,
         ],
 
         'api' => [
