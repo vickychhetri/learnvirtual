@@ -4,7 +4,7 @@
 <head>
     <title> @yield('title')</title>
     <!-- Meta Tags -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     <meta charset="utf-8">
     <meta name="keywords" content="Learn Virtual, Amita web, PHD Data " />
     <script>
