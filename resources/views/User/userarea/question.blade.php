@@ -97,6 +97,7 @@ button:hover {
             $QuestionOrder=1;
                 ?>
         <form id="regForm" action="/User/Test" method="post">
+            {{csrf_field()}}
             @foreach($Quest as $question)
             <!-- One "tab" for each step in the form: -->
             <div class="tab">

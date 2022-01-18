@@ -10,7 +10,19 @@ use App\Models\Lockunlockmodule;
 use App\Models\Testcomplete;
 
 class AttempttestController extends Controller
-{
+{   
+    public function isPreOrPost($testID){
+        $TestType="0";
+        $datasetComplete=Testcomplete::where('TestID','=',$testID)->get();
+        // print_r($datasetComplete);
+        if(!isset($datasetComplete->Complete)){
+                $TestType="PRE";
+        }else{
+            $TestType="1";
+        }
+        return $TestType;
+    }
+    
     public function isTestLocked($testID){
         $unlock=0;
         $unlockValue=Lockunlockmodule::where('ContentType','=','1')
@@ -37,6 +49,12 @@ class AttempttestController extends Controller
      */
     public function index($testID)
     {
+        $obj=new AttempttestController();
+        $unlock=$obj->isTestLocked($testID);
+        if($unlock==0){
+            return redirect('/User/list-Test');
+        }
+
         $dataset = DB::table('test_modules')
         ->join('questionbanks', 'test_modules.TestID', '=', 'questionbanks.TestID')
         ->select('questionbanks.*', 'test_modules.*')
@@ -121,7 +139,7 @@ class AttempttestController extends Controller
      */
     public function store(Request $request)
     {
-        var_dump($request);
+        print_r($request->optionSelected2);
     }
 
     /**
