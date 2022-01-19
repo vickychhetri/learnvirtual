@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Carbon\Carbon;
 
 use App\Models\attempttest;
 use App\Models\questionbank;
@@ -22,7 +23,7 @@ class AttempttestController extends Controller
         }
         return $TestType;
     }
-    
+
     public function isTestLocked($testID){
         $unlock=0;
         $unlockValue=Lockunlockmodule::where('ContentType','=','1')
@@ -55,27 +56,36 @@ class AttempttestController extends Controller
             return redirect('/User/list-Test');
         }
 
+        $TestType=$obj->isPreOrPost($testID);
+
         $dataset = DB::table('test_modules')
         ->join('questionbanks', 'test_modules.TestID', '=', 'questionbanks.TestID')
         ->select('questionbanks.*', 'test_modules.*')
         ->where('questionbanks.TestID', '=', $testID)
         ->get();
 
+        Session()->put('QuestData',$dataset);
+        Session()->put('TestType',$TestType);
+
         return view('User.userarea.question')
-        ->with('Quest',$dataset);
+        ->with('Quest',$dataset)
+        ->with('TestType',$TestType)
+        ->with('noQ',$dataset->count());
     }
     
     public function start_test($testID)
     {
-        $TestType="0";
-        $datasetComplete=Testcomplete::where('TestID','=',$testID)->get();
-        // print_r($datasetComplete);
-        if(!isset($datasetComplete->Complete)){
-                $TestType="PRE";
-        }else{
-            $TestType="1";
-        }
+        // $TestType="0";
+        // $datasetComplete=Testcomplete::where('TestID','=',$testID)->get();
+        // // print_r($datasetComplete);
+        // if(!isset($datasetComplete->Complete)){
+        //         $TestType="PRE";
+        // }else{
+        //     $TestType="1";
+        // }
         $obj=new AttempttestController();
+        $TestType=$obj->isPreOrPost($testID);
+
         $unlock=$obj->isTestLocked($testID);
         if($unlock==0){
             return redirect('/User/list-Test');
@@ -90,7 +100,6 @@ class AttempttestController extends Controller
         ->with('test',$dataset)
         ->with('TestType',$TestType)
         ->with('noQ',$dataset->count());
-
     }
     
     public function list_test()
@@ -139,7 +148,27 @@ class AttempttestController extends Controller
      */
     public function store(Request $request)
     {
-        print_r($request->optionSelected2);
+        $questionData=session()->get('QuestData');
+        $TestType=session()->get('TestType');
+        $UserID=session()->get('userid');
+        $dateSubmit = Carbon::now();
+        $TestIDs=0;
+        $i=1;
+                foreach($questionData as $questionD){
+                $data[] = [
+                            'TestType' => $TestType,
+                            'TestID' =>$questionD->TestID,
+                            'QuestionID' => $questionD->QuestionID,
+                            'selectedAnswer' => $request["optionSelected".$i],
+                            'UserID' =>$UserID,
+                            'created_at'=>$dateSubmit,
+                            'updated_at'=>$dateSubmit
+                        ];
+            $i++;
+            $TestIDs=$questionD->TestID;
+              }
+              attempttest::insert($data);
+                return redirect('/User/Test/reportAfterTest/'.$TestIDs.'/'. $TestType);
     }
 
     /**

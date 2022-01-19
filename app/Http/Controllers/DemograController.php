@@ -36,7 +36,6 @@ class DemograController extends Controller
      */
     public function store(Request $request)
     {
-          
         $request->validate([
             'age' => 'required',
             'gender' => 'required',
@@ -67,10 +66,10 @@ class DemograController extends Controller
     
         } catch (QueryException $e) {    
             print($e);
-    // return redirect()->back()->with('Error', 'Error : Try Again !');
+    return redirect()->back()->with('Error', 'Error : Try Again !');
     }
 // open module
-  //  return redirect('/Login')->with('message', 'Registration Successfully Done ! , login Now.');
+    return redirect('/Login')->with('message', 'Registration Successfully Done ! , login Now.');
   
     }
 
